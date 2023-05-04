@@ -127,3 +127,20 @@ class DBManager:
             result = cur.fetchall()
         self._close()
         return result
+
+    def delete_company(self, company_name: str):
+        """
+            Удаляет компанию и все связанные с ней вакансии по её названию.
+
+            Args:
+                company_name: Строка с названием компании для удаления.
+        """
+        self._connect()
+        with self.conn.cursor() as cur:
+            cur.execute(f"""
+                DELETE FROM vacancies WHERE companies_id IN 
+                (SELECT companies_id FROM companies WHERE LOWER(companies_name) = LOWER('{company_name}'));
+                DELETE FROM companies WHERE LOWER(companies_name) = LOWER('{company_name}');
+            """)
+        self._close()
+
