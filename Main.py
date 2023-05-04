@@ -25,9 +25,6 @@ def Main():
         json_file_path = f"{company_name}.json"
         insert_data_to_db(db_name, params, json_file_path)
 
-        # Создание экземпляра класса для работы с базой данных
-        db_manager = DBManager(db_name, params)
-
         choice = input('Хотите ли вы продолжить поиск? (Y/N): ')
 
         if choice.lower() == 'n':
@@ -44,6 +41,8 @@ def Main():
         print('3. Показать среднюю зарплату')
         print('4. Показать вакансии с зарплатой выше средней')
         print('5. Поиск вакансий по ключевому слову')
+        print('6. Удаление компании из базы данных')
+        print('7. Вернуться к поиску компаний')
         print('0. Выйти')
 
         choice = input()
@@ -68,8 +67,19 @@ def Main():
             result = db_manager.get_vacancies_with_keyword(keyword)
             for row in result:
                 print(f'{row[0]}: {row[1]}, зарплата: {row[2]}, ссылка: {row[3]}')
+        elif choice == '6':
+            company_name = input('Введите название компании для удаления: ')
+            db_manager.delete_company(company_name)
+            print("Компания и вакансии удалены.")
         elif choice == '0':
             break
+        elif choice == '7':
+            company_name = input('Введите название компании: ')
+            hh = HH(company_name)
+            hh.get_companies()
+            json_file_path = f"{company_name}.json"
+            insert_data_to_db(db_name, params, json_file_path)
+            continue
         else:
             print('Некорректный выбор.')
 
