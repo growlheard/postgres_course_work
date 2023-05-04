@@ -23,10 +23,10 @@ def create_database(database_name: str, params: dict) -> None:
     cur.execute(f"SELECT 1 FROM pg_database WHERE datname='{database_name}'")
     exists = cur.fetchone()
 
-    if exists:
-        cur.execute(f'DROP DATABASE {database_name}')
+    if not exists:
+        #  cur.execute(f'DROP DATABASE {database_name}')
 
-    cur.execute(f'CREATE DATABASE {database_name}')
+        cur.execute(f'CREATE DATABASE {database_name}')
 
     cur.close()
     conn.close()
@@ -131,6 +131,3 @@ def insert_data_to_db(database_name: str, params: dict, json_file_path: str) -> 
     conn.commit()
     print("Данные успешно внесены в таблицы companies и vacancies")
     conn.close()
-
-
-

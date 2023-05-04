@@ -5,25 +5,35 @@ from config import config
 
 
 def Main():
-    company_name = input('Введите название компании: ')
+    while True:
+        company_name = input('Введите название компании: ')
 
-    # Получение данных о компании с сайта hh.ru
-    hh = HH(company_name)
-    hh.get_companies()
+        # Получение данных о компании с сайта hh.ru
+        hh = HH(company_name)
+        hh.get_companies()
 
-    # Чтение параметров для подключения к БД из конфигурационного файла
-    params = config()
+        # Чтение параметров для подключения к БД из конфигурационного файла
+        params = config()
 
-    # Ввод названия базы данных
-    db_name = input(f'Как Вы хотите назвать Базу Данных для компании {company_name}?\n  ')
+        # Ввод названия базы данных
+        db_name = 'hh_comp'
 
-    # Создание базы данных и таблиц
-    create_database(db_name, params)
+        # Создание базы данных и таблиц
+        create_database(db_name, params)
 
-    # Вставка данных в таблицу vacancies
-    json_file_path = f"{company_name}.json"
-    insert_data_to_db(db_name, params, json_file_path)
+        # Вставка данных в таблицу vacancies
+        json_file_path = f"{company_name}.json"
+        insert_data_to_db(db_name, params, json_file_path)
 
+        # Создание экземпляра класса для работы с базой данных
+        db_manager = DBManager(db_name, params)
+
+        choice = input('Хотите ли вы продолжить поиск? (Y/N): ')
+
+        if choice.lower() == 'n':
+            break
+        elif choice.lower() == 'y':
+            continue
     # Создание экземпляра класса для работы с базой данных
     db_manager = DBManager(db_name, params)
 
